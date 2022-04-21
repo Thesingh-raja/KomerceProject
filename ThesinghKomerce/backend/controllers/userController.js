@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import generateToken from '../utils/generateToken.js';
 import User from '../models/userModel.js';
 import Address from '../models/addressModel.js';
+// import redisClient from '../server'
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -69,6 +70,9 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get user by ID
+// @route   GET /api/users/:id
+// @access  Private/Admin
 const getUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).select('-password');
 
