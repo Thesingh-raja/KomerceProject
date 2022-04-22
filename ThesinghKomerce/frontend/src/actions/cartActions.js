@@ -21,7 +21,6 @@ import {
 } from '../constants/cartConstants';
 import {logout} from './userActions';
 import {getDiscountDetailById} from './discountActions';
-
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   const {data} = await axios.get(`/api/products/${id}`);
 
@@ -186,7 +185,7 @@ export const removeDiscountFromCart =
         },
       };
       await axios.put(
-        `http://localhost:3000/api/cart/add-discount/${userInfo._id}/${discountId}`,
+        `/api/cart/add-discount/${userInfo._id}/${discountId}`,
         config
       );
 

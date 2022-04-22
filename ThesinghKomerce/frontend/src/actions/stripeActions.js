@@ -20,7 +20,7 @@ export const createStripeSession =
       const config = {headers: {'Access-Control-Allow-Origin': '*'}};
       //get checkout sessions from API
       const {data} = await axios.post(
-        `http://localhost:3000/api/checkouts/checkout-session/${orderId}`,
+        `/api/checkouts/checkout-session/${orderId}`,
         body,
         config
       );

@@ -2,7 +2,6 @@ import React from 'react';
 import EmailTable from './emailTable';
 
 export const OrderEmail = ({session}) => {
-
   return (
     <div className="main-content">
       <table
@@ -139,7 +138,7 @@ export const OrderEmail = ({session}) => {
                                                 bgcolor="#000000"
                                                 align="center">
                                                 <a
-                                                  href={`http://localhost:3000/success/${session?.paymentResult?.id}`}
+                                                  href={`http://localhost:3000/order-details/${session?._id}`}
                                                   className="button__text"
                                                   style={{
                                                     fontSize: 16,

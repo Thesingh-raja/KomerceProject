@@ -32,7 +32,7 @@ const OrderDetailsPage = ({match, history}) => {
     ?.reduce((acc, item) => acc + item.qty * item.response.price, 0)
     .toFixed(2);
   const totalDiscount = totalPrice - discountedSubTotal;
-  const stripeId = recentOrder?.paymentResult.id;
+  const stripeId = recentOrder?.paymentResult?.id;
 
   useEffect(() => {
     if (userInfo && stripeId) dispatch(getStripeLineItems(stripeId));
@@ -53,7 +53,7 @@ const OrderDetailsPage = ({match, history}) => {
         <div className="container">
           <div className="checkout-template page-content">
             <h2>Order # {recentOrder?.orderNo}</h2>
-            <p>Placed on {moment(recentOrder?.paidAt).format('ll')}</p>
+            <p>Placed on {moment(recentOrder?.createdAt).format('ll')}</p>
             <div className="mt-20">
               <Address recentOrder={recentOrder} />
             </div>

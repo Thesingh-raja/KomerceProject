@@ -482,6 +482,7 @@ table {
 }
 .line-item__remove:hover:enabled {
   background: #000;
+  cursor: pointer;
 }
 .line-item__remove:hover:enabled svg {
   color: #fff;

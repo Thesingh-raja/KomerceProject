@@ -12,7 +12,9 @@ export const Address = ({recentOrder}) => {
           {recentOrder?.billingAddress.billingPostalCode}
         </p>
         <p className="mt-20">
-          <strong>Payment Status: Paid</strong>
+          <strong>
+            Payment Status: {`${recentOrder?.isPaid ? 'Paid' : 'Not paid'}`}
+          </strong>
         </p>
       </div>
       <div className="address">

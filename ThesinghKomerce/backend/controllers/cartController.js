@@ -33,7 +33,7 @@ export const getCartItemsByUserId = asyncHandler(async (req, res) => {
 
 export const deleteEntireCartItem = asyncHandler(async (req, res) => {
   await Cart.deleteMany({user: req.params.id});
-  res.send('cart deleted');
+  res.send('cart delete success');
 });
 
 export const removeCartItembyId = asyncHandler(async (req, res) => {

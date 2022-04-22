@@ -163,8 +163,10 @@ export const CheckoutForm = ({id}) => {
 
   const checkoutHandler = e => {
     e.preventDefault();
-    dispatch(createOrder(orderz));
-    dispatch(updateAddressInfo(addressInfo));
+    if (itemsPrice > 0) {
+      dispatch(createOrder(orderz));
+      dispatch(updateAddressInfo(addressInfo));
+    } else toast.warn('Payment amount should be greater than zero');
   };
 
   const [symbolsArr] = useState(['e', 'E', '+', '-', '.']);

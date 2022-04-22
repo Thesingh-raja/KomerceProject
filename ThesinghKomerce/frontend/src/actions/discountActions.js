@@ -222,7 +222,5 @@ export const getDiscountDetailById =
   };
 
 export const deleteDiscount = Id => async (dispatch, getState) => {
-  const {data} = await axios.delete(
-    `http://localhost:3000/api/discounts/delete-discount/${Id}`
-  );
+  await axios.delete(`/api/discounts/delete-discount/${Id}`);
 };

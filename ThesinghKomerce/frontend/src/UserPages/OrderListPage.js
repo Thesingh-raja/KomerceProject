@@ -45,23 +45,20 @@ const OrderListPage = ({match, history}) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {order
-                          ?.filter(item => item.isPaid)
-                          .map((item, index) => (
-                            <tr key={index}>
-                              <td>{(index + 1).toString().padStart(2, 0)}</td>
-                              <td>
-                                <Link to={`/order-details/${item._id}`}>
-                                  <u>#{item.orderNo}</u>
-                                </Link>
-                              </td>
-                              {/* <td>{new Date(item.paidAt).toDateString()}</td> */}
-                              <td>{moment(item.paidAt).format('ll')}</td>
-                              <td>{item.isPaid ? 'Paid' : 'Not paid'}</td>
-                              <td>Unfulfilled</td>
-                              <td className="text-right">${item.totalPrice}</td>
-                            </tr>
-                          ))}
+                        {order?.map((item, index) => (
+                          <tr key={index}>
+                            <td>{(index + 1).toString().padStart(2, 0)}</td>
+                            <td>
+                              <Link to={`/order-details/${item._id}`}>
+                                <u>#{item.orderNo}</u>
+                              </Link>
+                            </td>
+                            <td>{moment(item.createdAt).format('ll')}</td>
+                            <td>{item.isPaid ? 'Paid' : 'Not paid'}</td>
+                            <td>Unfulfilled</td>
+                            <td className="text-right">${item.totalPrice}</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
