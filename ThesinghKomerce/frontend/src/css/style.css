@@ -1659,3 +1659,6 @@ input:-webkit-autofill:active {
 .product-media {
   min-width: 710px;
 }
+.remove-btn:hover {
+  cursor: pointer;
+}

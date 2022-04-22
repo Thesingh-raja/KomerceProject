@@ -4,7 +4,7 @@ import {getOrderDetails} from '../../actions/orderActions';
 import {getStripeLineItems} from '../../actions/stripeActions';
 import moment from 'moment';
 import Lottie from 'react-lottie';
-import {defaultOptions3} from '../../lotties/defaultOption';
+import {defaultOptions4} from '../../lotties/defaultOption';
 import {FinalItems} from './FinalItems';
 import {Address} from './Address';
 const OrderDetailsPage = ({match, history}) => {
@@ -14,9 +14,6 @@ const OrderDetailsPage = ({match, history}) => {
   const {userInfo} = useSelector(state => state.userLogin);
   const {recentOrder} = useSelector(state => state.orderDetailRecent);
   const items = recentOrder?.orderItems[0];
-  useEffect(() => {
-    if (userInfo && userInfo.isAdmin) history.push('/');
-  }, [userInfo, history]);
   let finalItems;
   if (items) finalItems = Object.values(items);
   const discountedSubTotal = (
@@ -25,9 +22,6 @@ const OrderDetailsPage = ({match, history}) => {
       0
     ) / 100
   ).toFixed(2);
-  const subTotal = finalItems
-    ?.reduce((acc, item) => acc + item.qty * item.response.price, 0)
-    .toFixed(2);
   const totalPrice = finalItems
     ?.reduce((acc, item) => acc + item.qty * item.response.price, 0)
     .toFixed(2);
@@ -35,20 +29,23 @@ const OrderDetailsPage = ({match, history}) => {
   const stripeId = recentOrder?.paymentResult?.id;
 
   useEffect(() => {
+    if (userInfo && userInfo.isAdmin) history.push('/');
+  }, [userInfo, history]);
+  useEffect(() => {
     if (userInfo && stripeId) dispatch(getStripeLineItems(stripeId));
-  }, [stripeId, userInfo, match]);
+  }, [stripeId, userInfo, match, dispatch]);
   useEffect(() => {
     setSplash(true);
     setTimeout(() => setSplash(false), 800);
   }, [match]);
   useEffect(() => {
     if (userInfo) dispatch(getOrderDetails(orderId));
-  }, [match, userInfo]);
+  }, [match, userInfo, orderId, dispatch]);
 
   return (
     <section>
       {splash ? (
-        <Lottie options={defaultOptions3} height={400} width={400} />
+        <Lottie options={defaultOptions4} height={400} width={400} />
       ) : (
         <div className="container">
           <div className="checkout-template page-content">

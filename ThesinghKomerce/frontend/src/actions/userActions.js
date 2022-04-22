@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import {toast} from 'react-toastify';
 import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
@@ -108,6 +108,11 @@ export const register = (email, password) => async dispatch => {
           ? error.response.data.message
           : error.message,
     });
+    toast.error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
   }
 };
 

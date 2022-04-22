@@ -2,38 +2,31 @@ import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {register} from '../actions/userActions';
 import {toast} from 'react-toastify';
+import validator from 'validator';
 const RegisterPage = ({location, history}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState(null);
-
   const dispatch = useDispatch();
   const userRegister = useSelector(state => state.userRegister);
-  const {error, userInfo} = userRegister;
-
-  useEffect(() => {
-    toast.clearWaitingQueue();
-    if (message) toast.warn(message);
-  }, [message]);
-  useEffect(() => {
-    toast.clearWaitingQueue();
-    if (error) toast.error(error);
-  }, [error]);
+  const {userInfo} = userRegister;
 
   useEffect(() => {
     if (userInfo) {
       history.push('/home');
     }
   }, [history, userInfo]);
-  // }, []);
+
   const submitHandler = e => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setMessage('Passwords do not match');
-    } else {
-      dispatch(register(email, password));
-    }
+    if (validator.isEmail(email)) {
+      if (password !== confirmPassword) {
+        toast.clearWaitingQueue();
+        toast.warn('Passwords do not match');
+      } else {
+        dispatch(register(email, password));
+      }
+    } else toast.warn('Invalid EmailId');
   };
 
   return (
@@ -56,7 +49,6 @@ const RegisterPage = ({location, history}) => {
               type="password"
               placeholder=""
               onChange={e => {
-                setMessage(null);
                 setPassword(e.target.value);
               }}
               minLength="8"
@@ -69,7 +61,6 @@ const RegisterPage = ({location, history}) => {
               type="password"
               placeholder=""
               onChange={e => {
-                setMessage(null);
                 setConfirmPassword(e.target.value);
               }}
               required

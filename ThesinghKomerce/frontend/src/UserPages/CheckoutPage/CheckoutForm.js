@@ -5,6 +5,7 @@ import {useStripe} from '@stripe/react-stripe-js';
 import {Link} from 'react-router-dom';
 import {createStripeSession} from '../../actions/stripeActions';
 import {userAddressInfo, updateAddressInfo} from '../../actions/userActions';
+import validator from 'validator';
 import {
   getCartDetails,
   updateDiscountValueToCart,
@@ -78,10 +79,6 @@ export const CheckoutForm = ({id}) => {
   const totalPrice = subTotal;
 
   let billingAddress, shippingAddress;
-  if (!loading && address) {
-    billingAddress = address[0]?.billingAddress;
-    shippingAddress = address[0]?.shippingAddress;
-  }
   const [billingInfo, setBillingInfo] = useState({
     name: '',
     billingEmail: '',
@@ -96,6 +93,12 @@ export const CheckoutForm = ({id}) => {
     shippingAddress: '',
     shippingPostalCode: '',
   });
+
+  if (!loading && address) {
+    billingAddress = address[0]?.billingAddress;
+    shippingAddress = address[0]?.shippingAddress;
+  }
+
   useEffect(() => {
     if (userInfo) setBillingInfo(billingAddress);
   }, [billingAddress, userInfo]);
@@ -163,10 +166,17 @@ export const CheckoutForm = ({id}) => {
 
   const checkoutHandler = e => {
     e.preventDefault();
-    if (itemsPrice > 0) {
-      dispatch(createOrder(orderz));
-      dispatch(updateAddressInfo(addressInfo));
-    } else toast.warn('Payment amount should be greater than zero');
+    if (
+      validator.isEmail(shippingInfo.shippingEmail) &&
+      validator.isEmail(billingInfo.billingEmail)
+    ) {
+      if (itemsPrice > 0) {
+        dispatch(createOrder(orderz));
+        dispatch(updateAddressInfo(addressInfo));
+      } else toast.warn('Payment amount should be greater than zero');
+    } else {
+      toast.warn('Invalid EmailId');
+    }
   };
 
   const [symbolsArr] = useState(['e', 'E', '+', '-', '.']);

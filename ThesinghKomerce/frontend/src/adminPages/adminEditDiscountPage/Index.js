@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
+import {Nav} from './Nav';
 import {
   listDiscountDetails,
   updateDiscount,
@@ -9,7 +10,9 @@ import {
 import {DISCOUNT_UPDATE_RESET} from '../../constants/discountConstants';
 import {listProducts} from '../../actions/productActions';
 import {toast} from 'react-toastify';
-
+import {formatDate} from './helper';
+import {SpecificProducts} from './SpecificProducts';
+import {Modal} from './Modal';
 const AdminEditDiscountPage = ({match, history}) => {
   const discountId = match.params.id;
   const [discountCode, setDiscountCode] = useState();
@@ -35,7 +38,7 @@ const AdminEditDiscountPage = ({match, history}) => {
   }, [userInfo, history]);
   useEffect(() => {
     if (userInfo) dispatch(listProducts());
-  }, [match, userInfo]);
+  }, [match, userInfo, dispatch]);
 
   useEffect(() => {
     if (userInfo) {
@@ -57,7 +60,6 @@ const AdminEditDiscountPage = ({match, history}) => {
       }
     }
   }, [dispatch, history, discountId, discount, successUpdate, userInfo]);
-  // }, []);
   const submitHandler = e => {
     e.preventDefault();
     if (Number(discountValue) < 100) {
@@ -84,22 +86,8 @@ const AdminEditDiscountPage = ({match, history}) => {
       } else toast.warn('End Date Should be Greater than Start Date', {});
     } else toast.warn('Enter Discount Value less than 100');
   };
-
-  function formatDate(date) {
-    var d = new Date(date),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    return [year, month, day].join('-');
-  }
-
   const startDateValue = formatDate(startDate);
   const endDateValue = formatDate(endDate);
-
   const showModal = () => {
     var specific = document.getElementById('specific');
     if (specific.checked === true) {
@@ -123,7 +111,6 @@ const AdminEditDiscountPage = ({match, history}) => {
     let tempArr = [...newProducts];
     const available = tempArr.find(({prodId}) => prodId === el.prodId);
     if (available) {
-      //delete product from array
       tempArr = tempArr.filter(x => x.prodId !== available.prodId);
     } else {
       tempArr.push(el);
@@ -161,21 +148,7 @@ const AdminEditDiscountPage = ({match, history}) => {
       <section className="flex">
         <div className="container-fluid">
           <div className="admin-content">
-            <div className="admin-left-nav mt-20">
-              <ul>
-                <li>
-                  <Link to="/admin/productlist">Products</Link>
-                </li>
-                <li>
-                  <Link to="/admin/orderlist">Orders</Link>
-                </li>
-                <li>
-                  <Link className="active" to="/admin/discountlist">
-                    Discount
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            <Nav />
             <div className="admin-right page-content">
               <div className="products-list">
                 <div className="actions flex items-center">
@@ -285,44 +258,12 @@ const AdminEditDiscountPage = ({match, history}) => {
                             </div>
                           </div>
 
-                          <div className="added-products mt-20">
-                            {!isApplicableToAll ? (
-                              <table className="table">
-                                <tbody>
-                                  {specificProducts?.map((el, index) => (
-                                    <tr key={index}>
-                                      <td>
-                                        <span className="admin-list-img">
-                                          <img
-                                            src={el.prodImage}
-                                            alt={el.prodName}
-                                          />
-                                        </span>
-                                      </td>
-                                      <td>
-                                        <div className="">
-                                          <Link
-                                            to={`/admin/product/${el.prodId}/edit`}>
-                                            <u>{el.prodName}</u>
-                                          </Link>
-                                        </div>
-                                      </td>
-                                      <td className="text-right">
-                                        <u
-                                          onClick={() =>
-                                            removeHandler(el.prodId)
-                                          }>
-                                          Remove
-                                        </u>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            ) : (
-                              ''
-                            )}
-                          </div>
+                          <SpecificProducts
+                            isApplicableToAll={isApplicableToAll}
+                            setIsApplicableToAll={setIsApplicableToAll}
+                            removeHandler={removeHandler}
+                            specificProducts={specificProducts}
+                          />
 
                           <div className="mt-20 discount-period">
                             <h4>Active Dates</h4>
@@ -402,82 +343,13 @@ const AdminEditDiscountPage = ({match, history}) => {
       </section>
 
       {viewModal ? (
-        <div id="show-modal">
-          <div className="overlay"></div>
-          <div className="admin-right page-content">
-            <div className="products-list">
-              <div className="actions flex items-center">
-                <h3>Select products</h3>
-              </div>
-              <div className="added-products border-t">
-                <div className="overflow-auto">
-                  <table className="table mt-20">
-                    <thead>
-                      <tr>
-                        <th>Select</th>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Inventory</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {products
-                        ?.filter(x => productFilter(x._id))
-                        .map((product, index) => (
-                          <tr key={index}>
-                            <td>
-                              <input
-                                type="checkbox"
-                                name="prod-item"
-                                onChange={() =>
-                                  selectBoxHandler(
-                                    product._id,
-                                    product.name,
-                                    product.image
-                                  )
-                                }
-                              />
-                            </td>
-                            <td>
-                              <span className="admin-list-img">
-                                <img src={product.image} alt={product.name} />
-                              </span>
-                            </td>
-                            <td>
-                              <div className="">
-                                <Link to={`/admin/product/${product._id}/edit`}>
-                                  <u>{product.name}</u>
-                                </Link>
-                              </div>
-                              <span>
-                                SKU: <span>{product.sku}</span>
-                              </span>
-                            </td>
-                            <td>${product.price}</td>
-                            <td>{product.inventory}</td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className="mt-20">
-                <button
-                  className="button button--hollow"
-                  onClick={() => addProdHandler()}>
-                  Apply
-                </button>
-                <button
-                  className="button update_btn"
-                  id="close-modal"
-                  onClick={e => hideModal()}>
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Modal
+          products={products}
+          productFilter={productFilter}
+          selectBoxHandler={selectBoxHandler}
+          addProdHandler={addProdHandler}
+          hideModal={hideModal}
+        />
       ) : (
         ''
       )}

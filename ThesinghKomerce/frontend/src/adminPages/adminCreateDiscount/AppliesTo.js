@@ -69,7 +69,11 @@ export const AppliesTo = ({
                     </div>
                   </td>
                   <td className="text-right">
-                    <u onClick={() => removeHandler(el.prodId)}>Remove</u>
+                    <u
+                      className="remove-btn"
+                      onClick={() => removeHandler(el.prodId)}>
+                      Remove
+                    </u>
                   </td>
                 </tr>
               ))}
