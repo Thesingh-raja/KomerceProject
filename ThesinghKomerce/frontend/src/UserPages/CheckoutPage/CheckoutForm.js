@@ -18,13 +18,14 @@ export const CheckoutForm = ({id}) => {
   const {userInfo} = useSelector(state => state.userLogin);
   const {loading, address} = useSelector(state => state.userAddress);
   const {success, order} = useSelector(state => state.orderCreate);
-  const {sessionCreateLoading, sessionCreated, session} = useSelector(
-    state => state.sessionCreate
-  );
+  const {sessionCreated, session} = useSelector(state => state.sessionCreate);
   const {discount} = useSelector(state => state.discountDetails);
   const {status, discount: discountDetail} = discount;
 
-  //////////////////////////////////////////////////////////////////////////////////
+  const discountCode =
+    userInfo && discountDetail && discountDetail?.discountCode
+      ? discountDetail.discountCode
+      : 'Not Applicable';
 
   let discountAmount = 0;
   let value = 0;
@@ -116,7 +117,7 @@ export const CheckoutForm = ({id}) => {
   });
 
   const orderz = {
-    discountCode: 'will be added',
+    discountCode,
     orderItems: {...carts},
     lineItems: line_items,
     shippingAddress: shippingInfo,
@@ -130,14 +131,14 @@ export const CheckoutForm = ({id}) => {
   const addressInfo = [billingInfo, shippingInfo];
 
   useEffect(() => {
-    if (userInfo && id !== ':id') {
+    if (userInfo && id !== userInfo._id) {
       dispatch(userAddressInfo(addressInfo));
     }
-  }, [userInfo]);
+  }, [userInfo, dispatch, id]);
 
   useEffect(() => {
     if (userInfo) dispatch(getCartDetails(userInfo._id));
-  }, [userInfo]);
+  }, [userInfo, dispatch]);
 
   useEffect(() => {
     if (userInfo && sessionCreated) {
@@ -145,7 +146,6 @@ export const CheckoutForm = ({id}) => {
       const {error} = stripe.redirectToCheckout({sessionId});
       if (error) {
         console.error(error);
-        toast.error(error);
       }
     }
   }, [sessionCreated]);

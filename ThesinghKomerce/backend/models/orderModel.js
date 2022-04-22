@@ -70,6 +70,11 @@ const orderSchema = mongoose.Schema(
     deliveredAt: {
       type: Date,
     },
+    discountCode: {
+      type: String,
+      required: true,
+      default: '',
+    },
   },
   {
     timestamps: true,

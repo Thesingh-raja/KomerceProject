@@ -17,16 +17,18 @@ export const FinalItems = ({
               {recentOrder.lineItems[index].amount / 100 ===
               item.response.price ? (
                 <td className="text-right">
-                  <span>${item.response.price}</span>
+                  <span>${item.response.price?.toFixed(2)}</span>
                 </td>
               ) : (
                 <td className="text-right">
                   {/* ${recentOrder.lineItems[index].amount / 100}{' '} */}
-                  <span>${item.response.price}</span>
+                  <span>${item.response.price?.toFixed(2)}</span>
                 </td>
               )}
               <td>{item.qty}</td>
-              <td className="text-right">${item.response.price * item.qty}</td>
+              <td className="text-right">
+                ${(item.response.price * item.qty)?.toFixed(2)}
+              </td>
             </tr>
           );
         })
@@ -51,7 +53,7 @@ export const FinalItems = ({
           <td colSpan="4">
             Discount{' '}
             <span>
-              <strong></strong>
+              <strong>({recentOrder?.discountCode})</strong>
             </span>
           </td>
           <td className="text-right">-${totalDiscount.toFixed(2)}</td>

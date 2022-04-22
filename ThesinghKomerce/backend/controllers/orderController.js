@@ -16,6 +16,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     taxPrice,
     shippingPrice,
     totalPrice,
+    discountCode,
   } = req.body.order;
 
   const user = req.body.user;
@@ -35,6 +36,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       taxPrice,
       shippingPrice,
       totalPrice,
+      discountCode,
     });
 
     const createdOrder = await order.save();

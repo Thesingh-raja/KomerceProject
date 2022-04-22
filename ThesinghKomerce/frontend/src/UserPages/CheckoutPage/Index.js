@@ -11,11 +11,17 @@ import {increaseReducedQuantity} from '../../actions/stripeActions';
 const CheckoutPage = ({match, history}) => {
   const dispatch = useDispatch();
   const {carts} = useSelector(state => state.cartlist);
+  const {userInfo} = useSelector(state => state.userLogin);
   const {discount} = useSelector(state => state.discountDetails);
-  const {status} = discount;
+  const {status, discount: discountDetail} = discount;
+
+  const discountCode =
+    userInfo && discountDetail && discountDetail?.discountCode
+      ? discountDetail.discountCode
+      : 'Not Applicable';
+
   const id = match.params.id;
 
-  const {userInfo} = useSelector(state => state.userLogin);
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) history.push('/');
   }, [userInfo, history]);
@@ -83,6 +89,7 @@ const CheckoutPage = ({match, history}) => {
                     itemsCount={itemsCount}
                     itemsPrice={itemsPrice}
                     discountAmount={discountAmount}
+                    discountCode={discountCode}
                     subTotal={subTotal}
                     totalPrice={totalPrice}
                   />

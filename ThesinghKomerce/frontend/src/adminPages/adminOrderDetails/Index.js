@@ -57,7 +57,7 @@ const AdminOrderDetailsPage = ({match}) => {
                       <div className="flex border-t">
                         <span>Subtotal</span>
                         <span>{itemsCount} item</span>
-                        <span>{subTotal}</span>
+                        <span>${Number(subTotal)?.toFixed(2)}</span>
                       </div>
                       <div className="flex">
                         <span>Shipping</span>
@@ -67,21 +67,30 @@ const AdminOrderDetailsPage = ({match}) => {
                         <span>Tax</span>
                         <span>$0.00</span>
                       </div>
-                      <div className="flex">
-                        <span>Discount</span>
-                        <span>-${discountAmount}</span>
-                      </div>
+                      {discountAmount ? (
+                        <div className="flex">
+                          <span>
+                            Discount{' '}
+                            <strong>({recentOrder?.discountCode})</strong>
+                          </span>
+                          <span>-${Number(discountAmount).toFixed(2)} </span>
+                        </div>
+                      ) : (
+                        ''
+                      )}
                       <div className="flex">
                         <span>
                           <strong>Total</strong>
                         </span>
                         <span>
-                          <strong>${totalPrice}</strong>
+                          <strong>${Number(totalPrice)?.toFixed(2)}</strong>
                         </span>
                       </div>
                       <div className="flex border-t">
                         <span>Paid by customer</span>
-                        <span>${recentOrder?.totalPrice}</span>
+                        <span>
+                          ${Number(recentOrder?.totalPrice)?.toFixed(2)}
+                        </span>
                       </div>
                     </div>
                   </div>

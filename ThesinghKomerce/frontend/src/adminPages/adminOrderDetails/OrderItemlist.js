@@ -21,9 +21,9 @@ const OrderItemList = ({item}) => {
         </label>
       </td>
       <td>
-        ${item.response.price} × <span>{item.qty}</span>
+        ${Number(item.response.price)?.toFixed(2)} × <span>{item.qty}</span>
       </td>
-      <td>${item.response.price * item.qty}</td>
+      <td>${Number(item.response.price * item.qty)?.toFixed(2)}</td>
     </tr>
   );
 };

@@ -5,6 +5,7 @@ const OrderSummaryCheckout = ({
   itemsCount,
   itemsPrice,
   discountAmount,
+  discountCode,
   subTotal,
   totalPrice,
 }) => {
@@ -46,7 +47,16 @@ const OrderSummaryCheckout = ({
           </p>
           {discountAmount ? (
             <div className="cart-subtotal evenly-align cart__total">
-              <span className="cart-subtotal__title">Discount</span>
+              <span className="cart-subtotal__title">
+                Discount{' '}
+                <span
+                  style={{
+                    fontSize: 14,
+                    color: '#999',
+                  }}>
+                  ({discountCode})
+                </span>
+              </span>
               <strong>
                 <span className="cart-subtotal__price">
                   -$ {discountAmount}
