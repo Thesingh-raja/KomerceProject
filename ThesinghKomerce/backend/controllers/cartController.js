@@ -97,3 +97,19 @@ export const overAllUpdateQty = asyncHandler(async (req, res) => {
   });
   res.send('success');
 });
+
+export const checkCart = asyncHandler(async (req, res) => {
+  const cart = req.body;
+  let reducedProducts = cart.length
+    ? cart.map(async el => {
+        const product = await Product.findById(el.response._id);
+        if (product && product.inventory < el.qty) {
+          if (product.inventory === 0) {
+            await Cart.findOneAndDelete({_id: el.cartData._id});
+          }
+          return product.name;
+        }
+      })
+    : [];
+  res.send(await Promise.all(reducedProducts));
+});

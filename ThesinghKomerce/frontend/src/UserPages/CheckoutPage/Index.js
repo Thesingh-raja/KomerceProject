@@ -83,7 +83,7 @@ const CheckoutPage = ({match, history}) => {
             <div className="checkout-details row">
               <div className="checkout-wrap">
                 <div className="checkout-section">
-                  <CheckoutForm id={id} />
+                  <CheckoutForm id={id} history={history} />
                   <OrderSummaryCheckout
                     carts={carts}
                     itemsCount={itemsCount}

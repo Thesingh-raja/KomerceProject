@@ -9,6 +9,7 @@ import {
   deleteEntireCartItem,
   updateDiscountValueToCart,
   overAllUpdateQty,
+  checkCart,
 } from '../controllers/cartController.js';
 import {protect, admin} from '../middleware/authMiddleware.js';
 
@@ -19,5 +20,6 @@ router.route('/update-discount-value/:value').post(updateDiscountValueToCart);
 router.route('/:id/:qty').put(updateCartItemById);
 router.route('/add-discount/:id/:discount').put(addDiscountToCart);
 router.route('/overall-update').post(overAllUpdateQty);
+router.route('/checkCart').post(checkCart);
 
 export default router;

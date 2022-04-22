@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useStripe} from '@stripe/react-stripe-js';
 import {Link} from 'react-router-dom';
+import {checkCartDispatch} from '../../actions/cartActions';
 import {createStripeSession} from '../../actions/stripeActions';
 import {userAddressInfo, updateAddressInfo} from '../../actions/userActions';
 import validator from 'validator';
@@ -12,7 +13,7 @@ import {
 } from '../../actions/cartActions';
 import {toast} from 'react-toastify';
 
-export const CheckoutForm = ({id}) => {
+export const CheckoutForm = ({id, history}) => {
   const stripe = useStripe();
   const dispatch = useDispatch();
   const {carts} = useSelector(state => state.cartlist);
@@ -153,6 +154,7 @@ export const CheckoutForm = ({id}) => {
     }
   }, [sessionCreated]);
 
+  const [clicked, setClicked] = useState(false);
   useEffect(() => {
     if (userInfo && success) {
       dispatch(
@@ -164,8 +166,9 @@ export const CheckoutForm = ({id}) => {
     }
   }, [success]);
 
-  const checkoutHandler = e => {
-    e.preventDefault();
+  const checkCart = useSelector(state => state.checkCart);
+
+  const validCheckoutHandler = () => {
     if (
       validator.isEmail(shippingInfo.shippingEmail) &&
       validator.isEmail(billingInfo.billingEmail)
@@ -177,6 +180,29 @@ export const CheckoutForm = ({id}) => {
     } else {
       toast.warn('Invalid EmailId');
     }
+  };
+
+  if (clicked && checkCart && checkCart.checkLoading === 'over') {
+    if (checkCart.changedProduct.length) {
+      toast.warn(
+        `Inventory Quantity of ${checkCart.changedProduct.map(
+          el => el
+        )} have Reduced, Please Reupdate the Quantity`,
+        {
+          autoClose: 3500,
+        }
+      );
+      setClicked(false);
+      history.push('/cart');
+    } else {
+      validCheckoutHandler();
+      setClicked(false);
+    }
+  }
+  const checkoutHandler = e => {
+    e.preventDefault();
+    setClicked(true);
+    dispatch(checkCartDispatch(carts));
   };
 
   const [symbolsArr] = useState(['e', 'E', '+', '-', '.']);

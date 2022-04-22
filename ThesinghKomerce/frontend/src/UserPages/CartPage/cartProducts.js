@@ -93,6 +93,7 @@ export const CartProducts = ({productId, overallUpdateCart}) => {
               const re = e.target.value.replace(/[^0-9]/gi, '');
               if (re === '0') {
                 setQty(1);
+                toast.clearWaitingQueue();
                 toast.warn('Product Quantity Cannot be Zero');
               } else if (productId?.response?.inventory < re) {
                 toast.clearWaitingQueue();

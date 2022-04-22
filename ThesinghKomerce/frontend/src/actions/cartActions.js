@@ -18,9 +18,10 @@ import {
   DISCOUNT_REMOVE_FAIL,
   OVERALL_UPDATE_SUCCESS,
   OVERALL_UPDATE_REQUEST,
+  CHECK_CART_REQUEST,
+  CHECK_CART_SUCCESS,
 } from '../constants/cartConstants';
 import {logout} from './userActions';
-import {getDiscountDetailById} from './discountActions';
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   const {data} = await axios.get(`/api/products/${id}`);
 
@@ -56,6 +57,14 @@ export const removeFromCart = id => async (dispatch, getState) => {
   dispatch({type: CART_REMOVE_SUCCESS, cartRemoved: false});
 };
 
+export const checkCartDispatch = carts => async (dispatch, getState) => {
+  dispatch({type: CHECK_CART_REQUEST, checkloading: true});
+  const {data} = await axios.post(`/api/cart/checkCart`, carts);
+  const datas = data.filter(el => el !== null);
+
+  dispatch({type: CHECK_CART_SUCCESS, checkloading: false, payload: datas});
+};
+
 export const getCartDetails = id => async dispatch => {
   try {
     dispatch({type: CART_LIST_REQUEST, payload: []});
@@ -68,8 +77,6 @@ export const getCartDetails = id => async dispatch => {
       type: CART_LIST_SUCCESS,
       payload: data,
     });
-
-    // dispatch(getDiscountDetailById(data[0]?.cartData.discount));
   } catch (error) {
     dispatch({
       type: CART_LIST_FAIL,
@@ -251,6 +258,6 @@ export const overAllUpdateQty = arr => async (dispatch, getState) => {
   } = getState();
 
   dispatch({type: OVERALL_UPDATE_REQUEST});
-  const {data} = await axios.post('/api/cart/overall-update', arr);
+  await axios.post('/api/cart/overall-update', arr);
   dispatch({type: OVERALL_UPDATE_SUCCESS});
 };

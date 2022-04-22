@@ -10,8 +10,10 @@ import {
   getCartDetails,
   updateDiscountValueToCart,
   overAllUpdateQty,
+  checkCartDispatch,
 } from '../../actions/cartActions';
 import {getDiscountDetailById} from '../../actions/discountActions';
+import {toast} from 'react-toastify';
 
 const CartPage = ({history}) => {
   let available = [];
@@ -26,7 +28,6 @@ const CartPage = ({history}) => {
   const lastUpdate = () => {
     if (available.length) dispatch(overAllUpdateQty(available));
   };
-
   const {updateSuccess} = useSelector(state => state.overAllUpdate);
   const {cartListLoading, carts} = useSelector(state => state.cartlist);
   const {userInfo} = useSelector(state => state.userLogin);
@@ -70,7 +71,7 @@ const CartPage = ({history}) => {
             (acc, item) => acc + item.qty * item.response.price * value,
             0
           )
-          .toFixed(2);
+          ?.toFixed(2);
         dispatch(getCartDetails(userInfo._id));
       } else if (
         status &&
@@ -106,7 +107,7 @@ const CartPage = ({history}) => {
           ((100 - item.cartData.discountValue) / 100),
       0
     )
-    .toFixed(2);
+    ?.toFixed(2);
   discountAmount = itemsPrice - subTotal;
   const totalPrice = subTotal;
 
@@ -115,9 +116,29 @@ const CartPage = ({history}) => {
   }, [cartRemoved, updateSuccess, userInfo]);
 
   const checkoutHandler = () => {
-    if (itemsCount) history.push(`/checkout/${userInfo._id}`);
+    setClicked(true);
+    dispatch(checkCartDispatch(carts));
+    // if (itemsCount)
   };
-
+  const checkCart = useSelector(state => state.checkCart);
+  const [clicked, setClicked] = useState(false);
+  if (clicked && checkCart && checkCart.checkLoading === 'over') {
+    if (checkCart.changedProduct.length) {
+      dispatch(getCartDetails(userInfo._id));
+      toast.warn(
+        `Inventory Quantity of ${checkCart.changedProduct.map(
+          el => el
+        )} have Reduced, Please Reupdate the Quantity`,
+        {
+          autoClose: 3500,
+        }
+      );
+      setClicked(false);
+    } else {
+      history.push(`/checkout/${userInfo._id}`);
+      setClicked(false);
+    }
+  }
   return (
     <section>
       {wholeCartLoading ? (
@@ -179,7 +200,7 @@ const CartPage = ({history}) => {
                               {itemsCount} items
                             </span>
                             <span className="cart-total-price">
-                              <span>$ {itemsPrice.toFixed(2)}</span>
+                              <span>$ {itemsPrice?.toFixed(2)}</span>
                             </span>
                           </p>
                           {discountAmount ? (
@@ -189,7 +210,7 @@ const CartPage = ({history}) => {
                               </span>
                               <strong>
                                 <span className="cart-subtotal__price">
-                                  $ {discountAmount.toFixed(2)}
+                                  $ {discountAmount?.toFixed(2)}
                                 </span>
                               </strong>
                             </div>

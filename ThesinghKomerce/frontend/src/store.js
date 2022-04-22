@@ -13,6 +13,7 @@ import {
   cartUpdateReducer,
   cartItemRemoveReducer,
   overAllUpdate,
+  checkCart,
 } from './reducers/cartReducers';
 import {
   userLoginReducer,
@@ -46,6 +47,7 @@ const reducer = combineReducers({
   productCreate: productCreateReducer,
   productUpdate: productUpdateReducer,
 
+  checkCart: checkCart,
   cart: cartReducer,
   cartlist: cartListReducer,
   cartUpdate: cartUpdateReducer,

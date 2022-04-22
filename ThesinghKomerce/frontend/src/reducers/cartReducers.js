@@ -14,6 +14,8 @@ import {
   CART_UPDATE_FAIL,
   OVERALL_UPDATE_REQUEST,
   OVERALL_UPDATE_SUCCESS,
+  CHECK_CART_REQUEST,
+  CHECK_CART_SUCCESS,
 } from '../constants/cartConstants';
 
 export const cartReducer = (state = {cartlist: []}, action) => {
@@ -113,6 +115,17 @@ export const overAllUpdate = (state = {}, action) => {
       return {updateSuccess: false};
     case OVERALL_UPDATE_SUCCESS:
       return {updateSuccess: true};
+    default:
+      return state;
+  }
+};
+
+export const checkCart = (state = {}, action) => {
+  switch (action.type) {
+    case CHECK_CART_REQUEST:
+      return {checkLoading: true};
+    case CHECK_CART_SUCCESS:
+      return {checkLoading: 'over', changedProduct: action.payload};
     default:
       return state;
   }
