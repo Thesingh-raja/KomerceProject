@@ -2,7 +2,7 @@
 
 Komerce is a basic B2C eCommerce store for Small merchants. This project served as an exercise for me in ReactJs and Node.js with express.
 
-Refer the design document below for deep understanding.
+Refer the design document below for deep understanding of the project structure.
 # https://docs.google.com/document/d/1xiRgBQFMXFPrwBDIlJbnRm5wFLw_TMPirqEsnES4aqI/edit?usp=sharing
 
 This application have two parts one is the admin area (Admins of the merchant) and the other one is the users who shop on the ecommerce front end (Ecommerce shoppers).
